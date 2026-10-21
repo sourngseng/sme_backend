@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             $this->seedRolesAndPermissions();
             $this->seedDefaultUsers();
         });
+
+        $this->call(PlatformDemoSeeder::class);
     }
 
     /**

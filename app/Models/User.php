@@ -103,6 +103,54 @@ class User extends Authenticatable
     }
 
     /**
+     * Guardian profile if user is a parent/guardian.
+     */
+    public function guardian(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Guardian::class, 'user_id');
+    }
+
+    /**
+     * Driver profile if user is a delivery driver.
+     */
+    public function driver(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Driver::class, 'user_id');
+    }
+
+    /**
+     * Restaurants owned by this user.
+     */
+    public function ownedRestaurants(): HasMany
+    {
+        return $this->hasMany(Restaurant::class, 'owner_user_id');
+    }
+
+    /**
+     * Restaurant staff associations.
+     */
+    public function restaurantStaff(): HasMany
+    {
+        return $this->hasMany(RestaurantStaff::class, 'user_id');
+    }
+
+    /**
+     * User delivery addresses.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class, 'user_id');
+    }
+
+    /**
+     * Platform notifications for this user.
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
+    /**
      * Check if user has a specific role or any of the given roles.
      *
      * @param string|array<int, string> $roles
