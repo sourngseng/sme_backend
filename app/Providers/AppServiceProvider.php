@@ -29,5 +29,10 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Gate::policy(\App\Models\Student::class, \App\Policies\StudentPolicy::class);
         \Illuminate\Support\Facades\Gate::policy(\App\Models\SchoolShift::class, \App\Policies\SchoolShiftPolicy::class);
         \Illuminate\Support\Facades\Gate::policy(\App\Models\SchoolLocation::class, \App\Policies\SchoolLocationPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Restaurant::class, \App\Policies\RestaurantPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\MenuItem::class, \App\Policies\MenuItemPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Order::class, \App\Policies\OrderPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\OrderSchedule::class, \App\Policies\OrderSchedulePolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Payment::class, \App\Policies\PaymentPolicy::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
-    use HasFactory, HasUuids;
+    use Auditable, HasFactory, HasUuids;
 
     protected $table = 'orders';
     protected $keyType = 'string';
@@ -84,5 +85,10 @@ class Order extends Model
     public function latestPayment(): HasOne
     {
         return $this->hasOne(Payment::class, 'order_id')->latestOfMany();
+    }
+
+    public function settlementItems(): HasMany
+    {
+        return $this->hasMany(SettlementItem::class, 'order_id');
     }
 }

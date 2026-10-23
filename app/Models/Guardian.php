@@ -37,4 +37,9 @@ class Guardian extends Model
     {
         return $this->hasMany(Order::class, 'guardian_id');
     }
+
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(MealFeedback::class, 'guardian_id');
+    }
 }

@@ -206,6 +206,31 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'user_id');
     }
 
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class, 'created_by');
+    }
+
+    public function campaigns(): HasMany
+    {
+        return $this->hasMany(Campaign::class, 'created_by');
+    }
+
+    public function openedTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class, 'opened_by');
+    }
+
+    public function assignedTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class, 'assigned_to');
+    }
+
+    public function reportSnapshots(): HasMany
+    {
+        return $this->hasMany(ReportSnapshot::class, 'generated_by');
+    }
+
     /**
      * Check if user has a specific role or any of the given roles.
      *

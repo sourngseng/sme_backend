@@ -106,4 +106,16 @@ class SchoolPolicy
 
         return $user->hasPermission('schools.policies.manage');
     }
+
+    /**
+     * Determine whether the user can view the meal roster for this school.
+     */
+    public function viewMealRoster(User $user, School $school): bool
+    {
+        if ($user->hasRole('school_admin')) {
+            return $user->school_id === $school->id;
+        }
+
+        return $user->hasPermission('schools.view');
+    }
 }
