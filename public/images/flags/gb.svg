@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="60" height="40">
+  <clipPath id="s">
+    <path d="M0,0 v40 h60 v-40 z"/>
+  </clipPath>
+  <clipPath id="t">
+    <path d="M30,20 L60,40 H45 L20,23.333 V20 z M30,20 L0,40 H15 L35,23.333 V20 z M30,20 L0,0 H15 L40,16.667 V20 z M30,20 L60,0 H45 L25,16.667 V20 z"/>
+  </clipPath>
+  <g clip-path="url(#s)">
+    <!-- Blue field -->
+    <path d="M0,0 v40 h60 v-40 z" fill="#012169"/>
+    <!-- White saltire (St Andrew's Cross) -->
+    <path d="M0,0 L60,40 M60,0 L0,40" stroke="#ffffff" stroke-width="8"/>
+    <!-- Red saltire (St Patrick's Cross counterchanged) -->
+    <path d="M0,0 L60,40 M60,0 L0,40" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/>
+    <!-- White cross background (St George's Cross border) -->
+    <path d="M30,0 v40 M0,20 h60" stroke="#ffffff" stroke-width="12"/>
+    <!-- Red cross (St George's Cross) -->
+    <path d="M30,0 v40 M0,20 h60" stroke="#C8102E" stroke-width="7"/>
+  </g>
+</svg>

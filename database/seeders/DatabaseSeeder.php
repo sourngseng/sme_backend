@@ -324,6 +324,14 @@ class DatabaseSeeder extends Seeder
                 'role' => 'restaurant_owner',
             ],
             [
+                'full_name' => 'Sokha Ngin (Kitchen Staff)',
+                'email' => 'kitchen@schoolmeal.test',
+                'phone' => '+85512000009',
+                'password_hash' => $defaultPassword,
+                'status' => 'active',
+                'role' => 'restaurant_staff',
+            ],
+            [
                 'full_name' => 'Borey Chan (Dispatch Driver)',
                 'email' => 'driver@schoolmeal.test',
                 'phone' => '+85512000005',

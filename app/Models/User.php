@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasUuids, Notifiable, SoftDeletes;
+    use Auditable, HasApiTokens, HasFactory, HasUuids, Notifiable, SoftDeletes;
 
     /**
      * The primary key type and incrementing setting.
@@ -33,10 +34,34 @@ class User extends Authenticatable
         'full_name',
         'email',
         'phone',
+        'avatar',
+        'bio',
+        'notification_preferences',
+        'password',
         'password_hash',
         'status',
         'last_login_at',
+        'role',
+        'school_id',
     ];
+
+    protected ?string $pendingRole = null;
+
+    public function setRoleAttribute(?string $value): void
+    {
+        $this->pendingRole = $value;
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (User $user) {
+            if ($user->pendingRole) {
+                $role = Role::firstOrCreate(['name' => $user->pendingRole], ['guard_name' => 'web', 'display_name' => ucfirst($user->pendingRole)]);
+                $user->roles()->syncWithoutDetaching([$role->id]);
+                $user->pendingRole = null;
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -58,7 +83,30 @@ class User extends Authenticatable
         return [
             'last_login_at' => 'datetime',
             'deleted_at' => 'datetime',
+            'notification_preferences' => 'array',
         ];
+    }
+
+    /**
+     * Accessor for profile image url.
+     */
+    public function getProfileImageUrlAttribute(): string
+    {
+        if (!empty($this->avatar)) {
+            return str_starts_with($this->avatar, 'http') || str_starts_with($this->avatar, '/') 
+                ? $this->avatar 
+                : asset($this->avatar);
+        }
+
+        if ($this->hasRole('restaurant_owner')) {
+            return asset('images/khmer_kitchen_avatar.jpg');
+        }
+
+        if ($this->hasRole(['restaurant_staff', 'kitchen_staff'])) {
+            return asset('images/sokha_ngin.jpg');
+        }
+
+        return asset('images/avatar_seng_sourng.jpg');
     }
 
     /**
@@ -100,6 +148,14 @@ class User extends Authenticatable
     public function deviceTokens(): HasMany
     {
         return $this->hasMany(DeviceToken::class, 'user_id');
+    }
+
+    /**
+     * Assigned school if user is a school administrator or staff.
+     */
+    public function school(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(School::class, 'school_id');
     }
 
     /**
@@ -181,7 +237,9 @@ class User extends Authenticatable
      */
     public function assignRole(string|Role $role): void
     {
-        $roleModel = is_string($role) ? Role::where('name', $role)->firstOrFail() : $role;
+        $roleModel = is_string($role) 
+            ? Role::firstOrCreate(['name' => $role], ['guard_name' => 'web', 'description' => ucfirst($role)]) 
+            : $role;
         $this->roles()->syncWithoutDetaching([$roleModel->id]);
     }
 
@@ -202,7 +260,14 @@ class User extends Authenticatable
     public function syncRoles(array $roles): void
     {
         $roleIds = collect($roles)->map(function ($role) {
-            return is_string($role) ? Role::where('name', $role)->firstOrFail()->id : $role->id;
+            if ($role instanceof Role) {
+                return $role->id;
+            }
+            if (is_string($role)) {
+                $found = Role::where('name', $role)->orWhere('id', $role)->first();
+                return $found ? $found->id : Role::firstOrCreate(['name' => $role], ['guard_name' => 'web'])->id;
+            }
+            return (string) $role;
         })->all();
 
         $this->roles()->sync($roleIds);

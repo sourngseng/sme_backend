@@ -80,6 +80,11 @@ class PlatformDemoSeeder extends Seeder
             ]
         );
 
+        $schoolAdmin = User::where('email', 'school@schoolmeal.test')->first();
+        if ($schoolAdmin) {
+            $schoolAdmin->update(['school_id' => $school->id]);
+        }
+
         // Shifts
         $morningShift = SchoolShift::firstOrCreate(
             ['school_id' => $school->id, 'name' => 'Morning Shift'],
@@ -198,6 +203,14 @@ class PlatformDemoSeeder extends Seeder
             ['restaurant_id' => $restaurant->id, 'user_id' => $merchantUser->id],
             ['job_title' => 'Executive Chef & Owner', 'status' => 'active']
         );
+
+        $kitchenUser = User::where('email', 'kitchen@schoolmeal.test')->first();
+        if ($kitchenUser) {
+            RestaurantStaff::firstOrCreate(
+                ['restaurant_id' => $restaurant->id, 'user_id' => $kitchenUser->id],
+                ['job_title' => 'Head Prep & Line Chef', 'status' => 'active']
+            );
+        }
 
         // Location
         RestaurantLocation::firstOrCreate(
