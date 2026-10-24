@@ -55,6 +55,14 @@ class AuditLog extends Model
     }
 
     /**
+     * User alias for actor.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->actor();
+    }
+
+    /**
      * Polymorphic parent model being audited.
      */
     public function auditable(): MorphTo

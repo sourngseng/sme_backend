@@ -256,4 +256,53 @@ class AuthController extends Controller
             'message' => 'Logged out successfully.',
         ], Response::HTTP_OK);
     }
+
+    /**
+     * Register or update mobile / web push device token (PB-004, PB-084).
+     */
+    public function registerDeviceToken(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'token' => ['required', 'string'],
+            'platform' => ['required', 'string', 'in:ios,android,web'],
+        ]);
+
+        $deviceToken = \App\Models\DeviceToken::updateOrCreate(
+            [
+                'user_id' => $request->user()->id,
+                'platform' => $validated['platform'],
+            ],
+            [
+                'token' => $validated['token'],
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Device token registered successfully for push notifications.',
+            'data' => [
+                'id' => $deviceToken->id,
+                'platform' => $deviceToken->platform,
+            ],
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Remove device token on logout or permission revoke.
+     */
+    public function removeDeviceToken(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'token' => ['required', 'string'],
+        ]);
+
+        \App\Models\DeviceToken::where('user_id', $request->user()->id)
+            ->where('token', $validated['token'])
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Device token removed successfully.',
+        ], Response::HTTP_OK);
+    }
 }

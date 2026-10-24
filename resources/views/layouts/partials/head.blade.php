@@ -100,19 +100,23 @@
         letter-spacing: 0 !important;
     }
 
-    html[lang="km"] .sidebar-section-title {
+    html[lang="km"] .sidebar-section-title,
+    html[lang="km"] .school-nav-section-title {
         font-size: 0.8rem !important;
         font-weight: 700 !important;
         letter-spacing: 0.02em !important;
         text-transform: none !important;
         color: #64748b;
+        font-family: var(--font-khmer) !important;
     }
 
-    html[lang="km"] .sidebar-item {
+    html[lang="km"] .sidebar-item,
+    html[lang="km"] .school-nav-item {
         font-size: 1.1rem !important; /* 0.94rem standard */
         font-weight: 500 !important;
         line-height: 1.55 !important;
         padding: 0.62rem 0.8rem !important;
+        font-family: var(--font-khmer) !important;
     }
 
     html[lang="km"] .sidebar-item-left {
@@ -412,7 +416,9 @@
         background: rgba(56, 189, 248, 0.5);
     }
 
-    .sidebar-section-title {
+    .sidebar-section-title,
+    .school-nav-section-title {
+        font-family: var(--font-sans);
         font-size: 0.6875rem;
         font-weight: 700;
         color: #475569;
@@ -423,7 +429,8 @@
         white-space: nowrap;
     }
 
-    .sidebar-item {
+    .sidebar-item,
+    .school-nav-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -431,6 +438,7 @@
         border-radius: 8px;
         color: #cbd5e1;
         text-decoration: none;
+        font-family: var(--font-sans);
         font-size: 1.1rem !important;
         font-weight: 500;
         transition: all 0.15s ease;
@@ -595,20 +603,31 @@
     }
     aside.admin-sidebar.collapsed .sidebar-brand-title,
     aside.admin-sidebar.collapsed .sidebar-brand-subtitle,
+    aside.admin-sidebar.collapsed .school-brand-title,
+    aside.admin-sidebar.collapsed .school-brand-subtitle,
     aside.admin-sidebar.collapsed .sidebar-item-left span,
+    aside.admin-sidebar.collapsed .school-nav-left span,
     aside.admin-sidebar.collapsed .sidebar-chevron,
     aside.admin-sidebar.collapsed .sidebar-section-title,
+    aside.admin-sidebar.collapsed .school-nav-section-title,
     aside.admin-sidebar.collapsed .sidebar-submenu,
     aside.admin-sidebar.collapsed .sidebar-badge,
     aside.admin-sidebar.collapsed .sidebar-user-info,
-    aside.admin-sidebar.collapsed .sidebar-user-chevron {
+    aside.admin-sidebar.collapsed .sidebar-user-chevron,
+    aside.admin-sidebar.collapsed .school-context-card,
+    aside.admin-sidebar.collapsed .btn-switch-school span,
+    aside.admin-sidebar.collapsed .btn-switch-school svg:last-child {
         display: none !important;
     }
-    aside.admin-sidebar.collapsed .sidebar-item {
+    aside.admin-sidebar.collapsed .sidebar-item,
+    aside.admin-sidebar.collapsed .school-nav-item,
+    aside.admin-sidebar.collapsed .btn-switch-school {
         justify-content: center;
         padding: 0.75rem 0;
     }
-    aside.admin-sidebar.collapsed .sidebar-item-left {
+    aside.admin-sidebar.collapsed .sidebar-item-left,
+    aside.admin-sidebar.collapsed .school-nav-left,
+    aside.admin-sidebar.collapsed .btn-switch-school-left {
         justify-content: center;
         gap: 0;
     }
@@ -618,6 +637,10 @@
     }
     aside.admin-sidebar.collapsed .sidebar-user-content {
         justify-content: center;
+    }
+    aside.admin-sidebar.collapsed .sidebar-brand-box {
+        justify-content: center;
+        padding: 1.15rem 0;
     }
 
     /* ================= TOPBAR HEADER ================= */

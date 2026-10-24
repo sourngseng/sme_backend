@@ -318,4 +318,46 @@ class AuthAndAdminUserTest extends TestCase
 
         $this->assertSoftDeleted('users', ['id' => $newUserId]);
     }
+
+    public function test_authenticated_user_can_register_and_remove_device_token(): void
+    {
+        $user = User::create([
+            'full_name' => 'Device Token Tester',
+            'email' => 'device.token@example.com',
+            'password' => 'Password123!',
+            'status' => 'active',
+        ]);
+        $token = $user->createToken('test-token')->plainTextToken;
+
+        // Register device token
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/v1/auth/device-token', [
+                'token' => 'fcm_mock_token_123456789',
+                'platform' => 'android',
+            ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJsonPath('data.platform', 'android');
+
+        $this->assertDatabaseHas('device_tokens', [
+            'user_id' => $user->id,
+            'token' => 'fcm_mock_token_123456789',
+            'platform' => 'android',
+        ]);
+
+        // Remove device token
+        $removeResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->deleteJson('/api/v1/auth/device-token', [
+                'token' => 'fcm_mock_token_123456789',
+            ]);
+
+        $removeResponse->assertStatus(200)
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseMissing('device_tokens', [
+            'user_id' => $user->id,
+            'token' => 'fcm_mock_token_123456789',
+        ]);
+    }
 }

@@ -175,7 +175,10 @@
 
     <!-- SchoolMeal Kitchen Operations Sidebar -->
     <aside class="admin-sidebar" id="adminSidebar">
-        <!-- Top Kitchen Profile Box (No redundant brand box, exactly as in reference design) -->
+        <!-- 1. Unified Brand Header (Identical to Super Admin) -->
+        @include('layouts.partials.sidebar_brand')
+
+        <!-- 2. Top Kitchen Profile Box -->
         <div class="kitchen-sidebar-header">
             <div class="kitchen-avatar-wrap">
                 <img src="{{ asset('images/khmer_kitchen_avatar.jpg') }}" alt="Khmer Kitchen" class="kitchen-avatar-img" onerror="this.src='https://ui-avatars.com/api/?name=KK&background=EA580C&color=fff'">

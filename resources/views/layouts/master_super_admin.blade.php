@@ -11,27 +11,12 @@
     <!-- Super Admin Sidebar -->
     <aside class="admin-sidebar" id="adminSidebar">
         <!-- Brand / Header -->
-        <div class="sidebar-brand-box">
-            <svg width="34" height="34" viewBox="0 0 64 64" fill="none" style="flex-shrink: 0;">
-                <path d="M8 44C18 40.5 27 43 31 46.5V20.5C27 17 18 14.5 8 18V44Z" fill="#10B981"/>
-                <path d="M56 44C46 40.5 37 43 33 46.5V20.5C37 17 46 14.5 56 18V44Z" fill="#F97316"/>
-                <path d="M31 46.5C31.5 46.8 32.5 46.8 33 46.5V20.5C32.5 20.2 31.5 20.2 31 20.5V46.5Z" fill="#0284C7"/>
-                <path d="M32 24V11" stroke="#22C55E" stroke-width="3" stroke-linecap="round"/>
-                <path d="M32 17C26 17 25 12 28 10C31 10 32 14 32 17Z" fill="#22C55E"/>
-                <path d="M32 15C38 15 39 9 36 8C33 8 32 12 32 15Z" fill="#16A34A"/>
-            </svg>
-            <div style="line-height: 1.2; overflow: hidden;">
-                <div class="sidebar-brand-title">SchoolMeal</div>
-                <div class="sidebar-brand-subtitle">{{ transLabel('form.hero_platform_tag', 'E-Commerce & Nutrition Platform') }}</div>
-            </div>
-            <!-- Mobile Drawer Close Button -->
-            <button type="button" onclick="toggleSidebarCollapse()" class="sidebar-close-btn" style="position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #94a3b8; font-size: 1.25rem; cursor: pointer; display: none;">✕</button>
-        </div>
+        @include('layouts.partials.sidebar_brand')
 
         <!-- Scrollable Navigation Menu -->
         <div class="sidebar-menu">
             <!-- Primary Dashboard -->
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ url('/admin/dashboard') }}" class="sidebar-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     <span>{{ transLabel('menu.dashboard', 'Dashboard') }}</span>
@@ -41,8 +26,8 @@
             <!-- Category: MANAGEMENT -->
             <div class="sidebar-section-title">{{ transLabel('menu.management', 'MANAGEMENT') }}</div>
 
-            <!-- Users & Roles (collapsible, open by default) -->
-            <div class="sidebar-dropdown-group open" id="groupUsers">
+            <!-- Users & Roles (collapsible, open by default or when on user routes) -->
+            <div class="sidebar-dropdown-group {{ request()->is('admin/users*') || request()->is('admin/roles*') || request()->is('admin/administrators*') ? 'open' : '' }}" id="groupUsers">
                 <div class="sidebar-item" onclick="toggleSidebarDropdown('groupUsers')">
                     <div class="sidebar-item-left">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -51,14 +36,14 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sidebar-chevron"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
                 <div class="sidebar-submenu">
-                    <a href="javascript:void(0)" onclick="showToast('Viewing All Users roster', 'info')" class="submenu-item">{{ transLabel('menu.all_users', 'All Users') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('Role permissions management', 'info')" class="submenu-item">{{ transLabel('menu.role_permissions', 'Role Permissions') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('System Administrators list', 'info')" class="submenu-item">{{ transLabel('menu.system_administrators', 'System Administrators') }}</a>
+                    <a href="{{ url('/admin/users') }}" class="submenu-item {{ request()->is('admin/users*') ? 'active' : '' }}">{{ transLabel('menu.all_users', 'All Users') }}</a>
+                    <a href="{{ url('/admin/roles') }}" class="submenu-item {{ request()->is('admin/roles*') ? 'active' : '' }}">{{ transLabel('menu.role_permissions', 'Role Permissions') }}</a>
+                    <a href="{{ url('/admin/administrators') }}" class="submenu-item {{ request()->is('admin/administrators*') ? 'active' : '' }}">{{ transLabel('menu.system_administrators', 'System Administrators') }}</a>
                 </div>
             </div>
 
             <!-- Schools -->
-            <a href="{{ Route::has('school.dashboard') ? route('school.dashboard') : 'javascript:void(0)' }}" class="sidebar-item">
+            <a href="{{ url('/admin/schools') }}" class="sidebar-item {{ request()->is('admin/schools*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 8-4 8 4"/><path d="M18 10 22 12v10H2V12l4-2"/><path d="M6 5v17"/><path d="M18 5v17"/><circle cx="12" cy="9" r="2"/></svg>
                     <span>{{ transLabel('menu.schools', 'Schools') }}</span>
@@ -66,7 +51,7 @@
             </a>
 
             <!-- Students -->
-            <a href="{{ Route::has('student.dashboard') ? route('student.dashboard') : 'javascript:void(0)' }}" class="sidebar-item">
+            <a href="{{ url('/admin/students') }}" class="sidebar-item {{ request()->is('admin/students*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 21v-2a6.5 6.5 0 0 1 13 0v2"/></svg>
                     <span>{{ transLabel('menu.students', 'Students') }}</span>
@@ -74,7 +59,7 @@
             </a>
 
             <!-- Restaurants -->
-            <a href="{{ Route::has('restaurant.dashboard') ? route('restaurant.dashboard') : 'javascript:void(0)' }}" class="sidebar-item">
+            <a href="{{ url('/admin/restaurants') }}" class="sidebar-item {{ request()->is('admin/restaurants*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/></svg>
                     <span>{{ transLabel('menu.restaurants', 'Restaurants') }}</span>
@@ -82,7 +67,7 @@
             </a>
 
             <!-- Menu & Nutrition (collapsible) -->
-            <div class="sidebar-dropdown-group" id="groupMenu">
+            <div class="sidebar-dropdown-group {{ request()->is('admin/menu*') || request()->is('admin/meal-plans*') || request()->is('admin/nutrition*') ? 'open' : '' }}" id="groupMenu">
                 <div class="sidebar-item" onclick="toggleSidebarDropdown('groupMenu')">
                     <div class="sidebar-item-left">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M8 11h8"/></svg>
@@ -91,14 +76,14 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sidebar-chevron"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
                 <div class="sidebar-submenu">
-                    <a href="javascript:void(0)" onclick="showToast('Dishes Catalog opened', 'info')" class="submenu-item">{{ transLabel('menu.catalog_dishes', 'Dishes Catalog') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('Weekly Meal Cycles opened', 'info')" class="submenu-item">{{ transLabel('menu.weekly_menu', 'Weekly Meal Cycles') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('Nutritional Guidelines opened', 'info')" class="submenu-item">{{ transLabel('menu.dietary_allergies', 'Nutritional Guidelines') }}</a>
+                    <a href="{{ url('/admin/menu') }}" class="submenu-item {{ request()->is('admin/menu*') ? 'active' : '' }}">{{ transLabel('menu.catalog_dishes', 'Dishes Catalog') }}</a>
+                    <a href="{{ url('/admin/meal-plans') }}" class="submenu-item {{ request()->is('admin/meal-plans*') ? 'active' : '' }}">{{ transLabel('menu.weekly_menu', 'Weekly Meal Cycles') }}</a>
+                    <a href="{{ url('/admin/nutrition') }}" class="submenu-item {{ request()->is('admin/nutrition*') ? 'active' : '' }}">{{ transLabel('menu.dietary_allergies', 'Nutritional Guidelines') }}</a>
                 </div>
             </div>
 
             <!-- Orders (collapsible) -->
-            <div class="sidebar-dropdown-group" id="groupOrders">
+            <div class="sidebar-dropdown-group {{ request()->is('admin/orders*') || request()->is('admin/kitchen-queue*') || request()->is('admin/order-analytics*') ? 'open' : '' }}" id="groupOrders">
                 <div class="sidebar-item" onclick="toggleSidebarDropdown('groupOrders')">
                     <div class="sidebar-item-left">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -107,14 +92,14 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sidebar-chevron"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
                 <div class="sidebar-submenu">
-                    <a href="#listsTrack" onclick="scrollSection('listsTrack', event)" class="submenu-item">{{ transLabel('menu.active_orders', 'Active Orders') }}</a>
-                    <a href="{{ Route::has('kitchen.dashboard') ? route('kitchen.dashboard') : 'javascript:void(0)' }}" class="submenu-item">{{ transLabel('menu.live_prep_queue', 'Live Kitchen Orders') }}</a>
-                    <a href="#graphsTrack" onclick="scrollSection('graphsTrack', event)" class="submenu-item">{{ transLabel('menu.order_history', 'Order Analytics') }}</a>
+                    <a href="{{ url('/admin/orders') }}" class="submenu-item {{ request()->is('admin/orders') ? 'active' : '' }}">{{ transLabel('menu.active_orders', 'Active Orders') }}</a>
+                    <a href="{{ url('/admin/kitchen-queue') }}" class="submenu-item {{ request()->is('admin/kitchen-queue*') ? 'active' : '' }}">{{ transLabel('menu.live_prep_queue', 'Live Kitchen Orders') }}</a>
+                    <a href="{{ url('/admin/order-analytics') }}" class="submenu-item {{ request()->is('admin/order-analytics*') ? 'active' : '' }}">{{ transLabel('menu.order_history', 'Order Analytics') }}</a>
                 </div>
             </div>
 
             <!-- Payments -->
-            <a href="{{ Route::has('finance.dashboard') ? route('finance.dashboard') : 'javascript:void(0)' }}" class="sidebar-item">
+            <a href="{{ url('/admin/payments') }}" class="sidebar-item {{ request()->is('admin/payments*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                     <span>{{ transLabel('menu.payments', 'Payments') }}</span>
@@ -122,7 +107,7 @@
             </a>
 
             <!-- Delivery & Drivers (collapsible) -->
-            <div class="sidebar-dropdown-group" id="groupDelivery">
+            <div class="sidebar-dropdown-group {{ request()->is('admin/drivers*') || request()->is('admin/deliveries*') || request()->is('admin/tracking*') ? 'open' : '' }}" id="groupDelivery">
                 <div class="sidebar-item" onclick="toggleSidebarDropdown('groupDelivery')">
                     <div class="sidebar-item-left">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/><path d="M17 18h2a1 1 0 0 0 1-1v-3.5a1 1 0 0 0-.3-.7l-2.4-2.4a1 1 0 0 0-.7-.4H14"/></svg>
@@ -131,9 +116,9 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sidebar-chevron"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
                 <div class="sidebar-submenu">
-                    <a href="{{ Route::has('driver.dashboard') ? route('driver.dashboard') : 'javascript:void(0)' }}" class="submenu-item">{{ transLabel('menu.drivers', 'Active Drivers') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('Fleet Dispatch live routing', 'info')" class="submenu-item">{{ transLabel('menu.daily_deliveries', 'Daily Deliveries') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('Live navigation map center', 'info')" class="submenu-item">{{ transLabel('menu.live_nav_map', 'Live Tracking Map') }}</a>
+                    <a href="{{ url('/admin/drivers') }}" class="submenu-item {{ request()->is('admin/drivers*') ? 'active' : '' }}">{{ transLabel('menu.drivers', 'Active Drivers') }}</a>
+                    <a href="{{ url('/admin/deliveries') }}" class="submenu-item {{ request()->is('admin/deliveries*') ? 'active' : '' }}">{{ transLabel('menu.daily_deliveries', 'Daily Deliveries') }}</a>
+                    <a href="{{ url('/admin/tracking') }}" class="submenu-item {{ request()->is('admin/tracking*') ? 'active' : '' }}">{{ transLabel('menu.live_nav_map', 'Live Tracking Map') }}</a>
                 </div>
             </div>
 
@@ -141,7 +126,7 @@
             <div class="sidebar-section-title">{{ transLabel('menu.finance', 'FINANCE') }}</div>
 
             <!-- Commissions -->
-            <a href="javascript:void(0)" onclick="showToast('Commission Rules & Rates matrix', 'info')" class="sidebar-item">
+            <a href="{{ url('/admin/commissions') }}" class="sidebar-item {{ request()->is('admin/commissions*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="M9 9h.01"/><path d="M15 15h.01"/></svg>
                     <span>{{ transLabel('menu.commissions', 'Commissions') }}</span>
@@ -149,7 +134,7 @@
             </a>
 
             <!-- Settlements -->
-            <a href="{{ Route::has('finance.dashboard') ? route('finance.dashboard') : 'javascript:void(0)' }}" class="sidebar-item">
+            <a href="{{ url('/admin/settlements') }}" class="sidebar-item {{ request()->is('admin/settlements*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="22" x2="9" y2="12"/><line x1="15" y1="22" x2="15" y2="12"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <span>{{ transLabel('menu.settlements', 'Settlements') }}</span>
@@ -157,7 +142,7 @@
             </a>
 
             <!-- Financial Reports -->
-            <a href="{{ Route::has('finance.dashboard') ? route('finance.dashboard') : 'javascript:void(0)' }}" class="sidebar-item">
+            <a href="{{ url('/admin/financial-reports') }}" class="sidebar-item {{ request()->is('admin/financial-reports*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
                     <span>{{ transLabel('menu.financial_reports', 'Financial Reports') }}</span>
@@ -167,8 +152,8 @@
             <!-- Category: OPERATIONS -->
             <div class="sidebar-section-title">{{ transLabel('menu.operations', 'OPERATIONS') }}</div>
 
-            <!-- Marketing (collapsible, open by default) -->
-            <div class="sidebar-dropdown-group open" id="groupMarketing">
+            <!-- Marketing (collapsible) -->
+            <div class="sidebar-dropdown-group {{ request()->is('admin/marketing*') || request()->is('admin/vouchers*') || request()->is('admin/promotions*') ? 'open' : '' }}" id="groupMarketing">
                 <div class="sidebar-item" onclick="toggleSidebarDropdown('groupMarketing')">
                     <div class="sidebar-item-left">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
@@ -177,14 +162,14 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="sidebar-chevron"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
                 <div class="sidebar-submenu">
-                    <a href="{{ Route::has('marketing.dashboard') ? route('marketing.dashboard') : 'javascript:void(0)' }}" class="submenu-item">{{ transLabel('menu.campaign_analytics', 'Campaign Analytics') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('Discount Vouchers & Promos', 'info')" class="submenu-item">{{ transLabel('menu.discount_vouchers', 'Discount Vouchers') }}</a>
-                    <a href="javascript:void(0)" onclick="showToast('Seasonal Promotion campaigns', 'info')" class="submenu-item">{{ transLabel('menu.seasonal_promotions', 'Seasonal Promotions') }}</a>
+                    <a href="{{ url('/admin/marketing') }}" class="submenu-item {{ request()->is('admin/marketing*') ? 'active' : '' }}">{{ transLabel('menu.campaign_analytics', 'Campaign Analytics') }}</a>
+                    <a href="{{ url('/admin/vouchers') }}" class="submenu-item {{ request()->is('admin/vouchers*') ? 'active' : '' }}">{{ transLabel('menu.discount_vouchers', 'Discount Vouchers') }}</a>
+                    <a href="{{ url('/admin/promotions') }}" class="submenu-item {{ request()->is('admin/promotions*') ? 'active' : '' }}">{{ transLabel('menu.seasonal_promotions', 'Seasonal Promotions') }}</a>
                 </div>
             </div>
 
             <!-- Notifications -->
-            <a href="javascript:void(0)" onclick="toggleNotifDropdown(event)" class="sidebar-item">
+            <a href="{{ url('/admin/notifications') }}" class="sidebar-item {{ request()->is('admin/notifications*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
                     <span>{{ transLabel('menu.notifications', 'Notifications') }}</span>
@@ -193,7 +178,7 @@
             </a>
 
             <!-- Support Tickets -->
-            <a href="{{ Route::has('support.dashboard') ? route('support.dashboard') : 'javascript:void(0)' }}" class="sidebar-item">
+            <a href="{{ url('/admin/support') }}" class="sidebar-item {{ request()->is('admin/support*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     <span>{{ transLabel('menu.support_tickets', 'Support Tickets') }}</span>
@@ -204,7 +189,7 @@
             <div class="sidebar-section-title">{{ transLabel('menu.reports', 'REPORTS') }}</div>
 
             <!-- Analytics -->
-            <a href="#graphsTrack" onclick="scrollSection('graphsTrack', event)" class="sidebar-item">
+            <a href="{{ url('/admin/analytics') }}" class="sidebar-item {{ request()->is('admin/analytics*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                     <span>{{ transLabel('menu.analytics', 'Analytics') }}</span>
@@ -212,7 +197,7 @@
             </a>
 
             <!-- Reports -->
-            <a href="javascript:void(0)" onclick="showToast('Exporting consolidated reports', 'info')" class="sidebar-item">
+            <a href="{{ url('/admin/reports') }}" class="sidebar-item {{ request()->is('admin/reports*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     <span>{{ transLabel('menu.reports_list', 'Reports') }}</span>
@@ -223,7 +208,7 @@
             <div class="sidebar-section-title">{{ transLabel('menu.system', 'SYSTEM') }}</div>
 
             <!-- Profile & Security (Super Admin) -->
-            <a href="{{ route('admin.profile') }}" class="sidebar-item {{ request()->routeIs('admin.profile*') ? 'active' : '' }}">
+            <a href="{{ url('/admin/profile') }}" class="sidebar-item {{ request()->is('admin/profile*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     <span>{{ transLabel('menu.profile_security', 'Profile & Security') }}</span>
@@ -231,7 +216,7 @@
             </a>
 
             <!-- Manage Languages (Super Admin Dedicated) -->
-            <a href="{{ route('admin.languages.index') }}" class="sidebar-item {{ request()->routeIs('admin.languages.*') ? 'active' : '' }}">
+            <a href="{{ url('/admin/languages') }}" class="sidebar-item {{ request()->is('admin/languages*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                     <span>{{ transLabel('menu.manage_languages', 'Manage Languages') }}</span>
@@ -239,15 +224,27 @@
             </a>
 
             <!-- System Settings (Super Admin Dedicated) -->
-            <a href="{{ route('admin.system_settings.index') }}" class="sidebar-item {{ request()->routeIs('admin.system_settings.*') ? 'active' : '' }}">
+            <a href="{{ url('/admin/system-settings') }}" class="sidebar-item {{ request()->is('admin/system-settings*') || request()->is('admin/system-setting*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     <span>{{ transLabel('menu.system_settings', 'System Settings') }}</span>
                 </div>
             </a>
 
+            <!-- REST API Studio / Postman Manager -->
+            <a href="{{ url('/admin/api-tester') }}" class="sidebar-item {{ request()->is('admin/api-tester*') || request()->is('admin/api-manager*') || request()->is('admin/rest-api*') ? 'active' : '' }}">
+                <div class="sidebar-item-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    <span>{{ transLabel('menu.rest_api_tester', 'REST API Studio') }}</span>
+                </div>
+                <span class="sidebar-badge" style="background: linear-gradient(135deg, #FF6C37, #EA580C); color: #fff; font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 9999px;">POSTMAN</span>
+            </a>
+
             <!-- Audit Logs -->
-            <a href="javascript:void(0)" onclick="showToast('Loading Security & Audit Trail', 'info')" class="sidebar-item">
+            <a href="{{ url('/admin/audit-logs') }}" class="sidebar-item {{ request()->is('admin/audit-logs*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
                     <span>{{ transLabel('menu.audit_logs', 'Audit Logs') }}</span>
@@ -255,7 +252,7 @@
             </a>
 
             <!-- System Health -->
-            <a href="javascript:void(0)" onclick="showToast('Cluster services & DB health: 99.98% OK', 'success')" class="sidebar-item">
+            <a href="{{ url('/admin/system-health') }}" class="sidebar-item {{ request()->is('admin/system-health*') ? 'active' : '' }}">
                 <div class="sidebar-item-left">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                     <span>{{ transLabel('menu.system_health', 'System Health') }}</span>

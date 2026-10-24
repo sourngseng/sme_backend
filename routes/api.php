@@ -50,6 +50,8 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
             Route::get('/me', [AuthController::class, 'me']);
             Route::post('/logout', [AuthController::class, 'logout']);
+            Route::post('/device-token', [AuthController::class, 'registerDeviceToken']);
+            Route::delete('/device-token', [AuthController::class, 'removeDeviceToken']);
         });
     });
 

@@ -11,16 +11,7 @@
     <!-- Marketing & Growth Sidebar -->
     <aside class="admin-sidebar" id="adminSidebar">
         <!-- Brand / Header -->
-        <div class="sidebar-brand-box">
-            <div style="width: 38px; height: 38px; background: linear-gradient(135deg, #7C3AED 0%, #C026D3 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 1.15rem; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4); flex-shrink: 0;">
-                MK
-            </div>
-            <div style="line-height: 1.2; overflow: hidden;">
-                <div class="sidebar-brand-title">SchoolMeal</div>
-                <div class="sidebar-brand-subtitle">{{ transLabel('form.role_marketing', 'Marketing & Growth Portal') }}</div>
-            </div>
-            <button type="button" onclick="toggleSidebarCollapse()" class="sidebar-close-btn" style="position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #94a3b8; font-size: 1.25rem; cursor: pointer; display: none;">✕</button>
-        </div>
+        @include('layouts.partials.sidebar_brand')
 
         <!-- Navigation Menu -->
         <div class="sidebar-menu">

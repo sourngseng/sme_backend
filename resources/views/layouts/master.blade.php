@@ -1276,24 +1276,8 @@
     <!-- ================= LEFT MASTER SIDEBAR ================= -->
     <aside class="admin-sidebar" id="adminSidebar">
 
-        <!-- Brand Box -->
-        <div class="sidebar-brand-box">
-            <svg width="34" height="34" viewBox="0 0 64 64" fill="none" style="flex-shrink: 0;">
-                <path d="M8 44C18 40.5 27 43 31 46.5V20.5C27 17 18 14.5 8 18V44Z" fill="#10B981"/>
-                <path d="M56 44C46 40.5 37 43 33 46.5V20.5C37 17 46 14.5 56 18V44Z" fill="#F97316"/>
-                <path d="M31 46.5C31.5 46.8 32.5 46.8 33 46.5V20.5C32.5 20.2 31.5 20.2 31 20.5V46.5Z" fill="#0284C7"/>
-                <path d="M32 24V11" stroke="#22C55E" stroke-width="3" stroke-linecap="round"/>
-                <path d="M32 17C26 17 25 12 28 10C31 10 32 14 32 17Z" fill="#22C55E"/>
-                <path d="M32 15C38 15 39 9 36 8C33 8 32 12 32 15Z" fill="#16A34A"/>
-            </svg>
-            <div>
-                <div class="sidebar-brand-title">@yield('portal_title', 'SchoolMeal')</div>
-                <div class="sidebar-brand-subtitle">@yield('portal_subtitle', 'E-Commerce Platform')</div>
-            </div>
-            <button type="button" class="sidebar-mobile-close" onclick="closeSidebarMobile()" aria-label="Close Sidebar" title="Close Sidebar">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-        </div>
+        <!-- Brand Box (Identical to Super Admin) -->
+        @include('layouts.partials.sidebar_brand')
 
         <!-- Navigation Menu -->
         <nav class="sidebar-menu">

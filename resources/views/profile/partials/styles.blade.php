@@ -3,14 +3,15 @@
        SCHOOL MEAL PROFILE, SETTINGS & SECURITY DESIGN SYSTEM
        ========================================================================== */
     .profile-page-wrapper {
-        padding: 1.5rem 1.5rem 3rem 1.5rem;
-        max-width: 1280px;
-        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0 0 2.5rem 0;
     }
 
     @media (max-width: 768px) {
         .profile-page-wrapper {
-            padding: 0.85rem 0.75rem 0 0.75rem;
+            padding: 0 0 1rem 0;
         }
     }
 
